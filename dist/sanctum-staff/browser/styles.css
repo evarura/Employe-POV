@@ -1,0 +1,19 @@
+/* src/styles.scss */
+* {
+  box-sizing: border-box;
+}
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+  font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
+}
+body {
+  background: #f5f6fa;
+}
+
+/* angular:styles/global:styles */
+/*# sourceMappingURL=styles.css.map */
