@@ -491,25 +491,25 @@ countGamingStations(category: string): number {
   recipes = [
     {
       name: 'Chicken Burger',
-      ingredients: 'Bun 1 Â· Chicken patty 150 g Â· Cheese 1 slice Â· Lettuce 20 g',
+      ingredients: 'Bun 1 · Chicken patty 150 g · Cheese 1 slice · Lettuce 20 g',
       cost: 92,
       price: 249
     },
     {
       name: 'Paneer Tikka',
-      ingredients: 'Paneer 180 g Â· Curd 40 g Â· Spice mix 15 g Â· Capsicum 30 g',
+      ingredients: 'Paneer 180 g · Curd 40 g · Spice mix 15 g · Capsicum 30 g',
       cost: 86,
       price: 219
     },
     {
       name: 'Margherita Pizza',
-      ingredients: 'Pizza base 1 Â· Mozzarella 100 g Â· Tomato sauce 50 g Â· Basil 5 g',
+      ingredients: 'Pizza base 1 · Mozzarella 100 g · Tomato sauce 50 g · Basil 5 g',
       cost: 104,
       price: 299
     },
     {
       name: 'Alfredo Pasta',
-      ingredients: 'Pasta 120 g Â· Cream 60 ml Â· Cheese 25 g Â· Herbs 5 g',
+      ingredients: 'Pasta 120 g · Cream 60 ml · Cheese 25 g · Herbs 5 g',
       cost: 98,
       price: 279
     }
