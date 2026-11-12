@@ -179,16 +179,13 @@ tbody tr:last-child td { border-bottom:0; }
 @media(max-width:800px) {
 
   .sidebar {
-    width: 260px;
-    padding: 20px 14px;
-    transform: translateX(-100%);
-    transition: transform 0.3s ease;
-    z-index: 1000;
+    width: 248px;
+    padding: 25px 17px 17px;
+    transform: none;
+    position: fixed;
+    inset: 0 auto 0 0;
     overflow-y: auto;
-  }
-
-  .sidebar.mobile-open {
-    transform: translateX(0);
+    z-index: 5;
   }
 
   .side-brand {
@@ -229,9 +226,9 @@ tbody tr:last-child td { border-bottom:0; }
   }
 
   .main-area {
-    margin-left: 0;
-  }
-
+  margin-left: 248px;
+  min-width: 0;
+}
   .topbar {
     height: 56px;
     padding: 0 14px;
@@ -793,4 +790,47 @@ tbody tr:last-child td { border-bottom:0; }
 
 .menu-card:hover .food-emoji {
   transform: scale(1.06);
+}
+
+/* MOBILE: NAVIGATION ICONS ONLY */
+@media (max-width: 560px) {
+
+  .sidebar {
+    width: 68px;
+    padding: 20px 8px;
+  }
+
+  .side-brand {
+    padding: 0 5px 20px;
+  }
+
+  .side-brand b,
+  .side-brand small,
+  .workspace-tag,
+  .nav-caption,
+  .shift-card,
+  .profile-info,
+  .logout {
+    display: none;
+  }
+
+  .nav-item {
+    justify-content: center;
+    padding: 13px 5px;
+    gap: 0;
+    font-size: 0;
+  }
+
+  .nav-item > span {
+    width: auto;
+    font-size: 20px;
+  }
+
+  .nav-item i {
+    display: none;
+  }
+
+  .main-area {
+    margin-left: 68px;
+  }
 }

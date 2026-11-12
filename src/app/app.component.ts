@@ -69,7 +69,11 @@ export class AppComponent implements OnDestroy {
   // =====================================================
 
   role: Role | null = null;
+  mobileMenuOpen = false;
 
+  toggleMobileMenu(): void {
+    this.mobileMenuOpen = !this.mobileMenuOpen;
+  }
   loginId = '';
   loginPassword = '';
   loginError = '';
@@ -636,7 +640,8 @@ countGamingStations(category: string): number {
     }
 
     this.page = page;
-  }
+    this.mobileMenuOpen = false;
+      }
 
   // =====================================================
   // NOTIFICATIONS
