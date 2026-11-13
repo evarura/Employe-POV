@@ -834,3 +834,221 @@ tbody tr:last-child td { border-bottom:0; }
     margin-left: 68px;
   }
 }
+
+.spoil-btn { border: 1px solid #dc2626; color: #b91c1c; background: #fff1f2; border-radius: 8px; padding: 8px 10px; cursor: pointer; margin-left: 8px; }
+.spoil-btn:disabled { opacity: .45; cursor: not-allowed; }
+.menu-card.menu-blocked { opacity: .48; cursor: not-allowed; filter: grayscale(.5); }
+
+
+.chef-metrics { grid-template-columns:repeat(3,minmax(0,1fr)); }
+.chef-content { grid-template-columns:minmax(0,1.5fr) minmax(0,1fr); align-items:start; }
+/* Stock list */
+
+.stock-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.stock-item {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(100px, 1fr) auto;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  background: #fff;
+  border: 1px solid #eae7e3;
+  border-radius: 12px;
+}
+
+.stock-info {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+}
+
+.stock-info strong {
+  font-size: 14px;
+  color: #24211e;
+}
+
+.stock-info span {
+  font-size: 13px;
+  color: #827a73;
+}
+
+.stock-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.flag-icon-btn {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid #f4c5c5;
+  border-radius: 10px;
+  background: #fff1f1;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.low-stock-btn {
+  min-height: 44px;
+  padding: 0 14px;
+  border: 1px solid #f8d3a6;
+  border-radius: 10px;
+  background: #fff4e5;
+  color: #ad5900;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.stock-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 7px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.stock-badge.available {
+  color: #167a45;
+  background: #e9f8ef;
+}
+
+.stock-badge.low {
+  color: #a75b00;
+  background: #fff1db;
+}
+
+.stock-badge.spoiled {
+  color: #c62828;
+  background: #ffebee;
+}
+
+
+/* SANCTUM consolidated tablet and compact layout overrides */
+.sidebar { gap:0 !important; overflow-y:auto; }
+.nav-item { min-height:44px !important; justify-content:flex-start !important; gap:10px !important; }
+.nav-item .nav-icon { flex:0 0 20px; }
+.workspace-tag { margin:14px 8px 16px; }
+.nav-spaced { margin-top:14px; }
+.sidebar-bottom { margin-top:auto; padding-top:18px; }
+.shift-card { margin:0 0 12px !important; min-height:0; }
+.metric-grid,.chef-metrics { gap:12px !important; }
+.metric-card { min-height:112px !important; }
+.content-grid,.chef-content { gap:12px !important; }
+.chef-content .dark-panel { min-height:0; }
+.floor-grid,.gaming-station-grid,.orders-grid { gap:12px; }
+.order-card,.gaming-station-card { padding:14px; }
+.gaming-customer { padding:10px 0; }
+.gaming-session { padding:10px 0; }
+.gaming-self-order { padding:10px 0; }
+.page-heading { margin-bottom:16px !important; }
+.order-card-foot { flex-wrap:wrap; }
+.order-card-foot .small-dark,.order-card-foot .orange-btn { min-height:40px; }
+.history-controls { display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin:0 0 14px; }
+.history-controls input,.history-controls select,.session-extension select,.editor-fields input,.editor-fields select,.complaint-dialog textarea { min-height:42px; border:1px solid #e6dfd8; border-radius:8px; padding:9px; background:#fff; color:#29231e; }
+.session-extension { display:flex; align-items:center; gap:8px; flex-wrap:wrap; padding-top:10px; border-top:1px solid #eee9e3; }
+.session-extension .small-dark:disabled { opacity:.4; cursor:not-allowed; }
+.editor-overlay { position:fixed; inset:0; background:#0008; display:grid; place-items:center; z-index:40; padding:16px; }
+.editor-dialog { background:#fff; border-radius:14px; padding:20px; width:min(480px,100%); max-height:90vh; overflow:auto; }
+.editor-dialog h2 { margin:0 0 14px; }
+.editor-fields { display:grid; gap:10px; }
+.editor-fields label { display:grid; gap:5px; font-size:12px; font-weight:700; }
+.editor-actions { display:flex; justify-content:flex-end; gap:8px; margin-top:16px; }
+.editor-actions button { min-height:42px; }
+.complaint-dialog textarea { width:100%; min-height:90px; resize:vertical; }
+.menu-edit-list { display:grid; gap:7px; margin-top:12px; }
+.menu-edit-row { display:flex; justify-content:space-between; align-items:center; gap:10px; border-bottom:1px solid #eee; padding:6px 0; font-size:12px; }
+.menu-edit-row button { min-height:36px; }
+.order-item-row { display:flex; align-items:center; justify-content:space-between; gap:8px; }
+.order-item-row button { border:0; background:#fff1e8; color:#a54314; border-radius:6px; padding:6px; cursor:pointer; }
+@media (min-width:601px) and (max-width:1100px) {
+ .sidebar { width:190px !important; padding:14px 10px !important; }
+ .main-area { margin-left:190px !important; width:calc(100% - 190px) !important; }
+ .page-wrap { padding:16px !important; }
+ .metric-grid,.chef-metrics { grid-template-columns:repeat(2,minmax(0,1fr)) !important; }
+ .content-grid,.chef-content,.order-builder { grid-template-columns:1fr !important; }
+ .gaming-station-grid,.orders-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+ .floor-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+ .cart-panel { position:static; }
+}
+@media (max-width:600px) {
+ .app-shell { display:block !important; }
+ .sidebar { position:relative !important; inset:auto !important; transform:none !important; width:100% !important; padding:10px !important; }
+ .sidebar-bottom { display:none; }
+ .side-brand { padding-bottom:8px; }
+ .side-brand>div:last-child { display:block !important; }
+ .nav-caption,.workspace-tag { display:none !important; }
+ .nav-item { width:auto !important; display:inline-flex !important; font-size:11px !important; padding:9px !important; margin:2px !important; }
+ .nav-item i { display:none !important; }
+ .main-area { margin-left:0 !important; width:100% !important; }
+ .metric-grid,.chef-metrics { grid-template-columns:1fr !important; }
+ .order-builder,.content-grid,.chef-content { grid-template-columns:1fr !important; }
+ .gaming-station-grid,.orders-grid { grid-template-columns:1fr !important; }
+ .topbar { padding:0 10px; }
+}
+
+
+
+/* SANCTUM layout correction — replaces conflicting earlier overrides */
+:host { display:block; width:100%; }
+.app-shell { min-height:100vh; }
+.sidebar { width:248px !important; padding:18px 14px !important; display:flex; flex-direction:column; gap:0 !important; overflow-y:auto; }
+.side-brand { padding:0 6px 16px !important; }
+.workspace-tag { margin:14px 6px 16px !important; }
+.nav-caption { margin:0 !important; padding:12px 10px 6px !important; }
+.nav-caption.nav-spaced { margin-top:12px !important; }
+.sidebar .nav-item { display:flex !important; align-items:center !important; justify-content:flex-start !important; flex:0 0 44px; width:100%; min-height:44px !important; height:44px; margin:2px 0 !important; padding:9px 12px !important; gap:10px !important; }
+.sidebar .nav-item .nav-icon { flex:0 0 20px; width:20px; height:20px; display:inline-flex; align-items:center; justify-content:center; }
+.sidebar .nav-item .nav-icon svg { width:18px; height:18px; }
+.sidebar .nav-item i { margin-left:auto; }
+.sidebar-bottom { margin-top:auto !important; padding-top:12px !important; }
+.sidebar .shift-card { display:flex; align-items:center; gap:10px; min-height:0 !important; padding:12px !important; margin:0 0 10px !important; }
+.main-area { margin-left:248px !important; width:calc(100% - 248px) !important; min-width:0; }
+.page-wrap { width:100%; min-width:0; padding:24px 26px 18px !important; }
+.page-heading { margin-bottom:18px !important; }
+/* Critical: metric cards must be direct grid items, not whitespace text nodes. */
+.metric-grid.chef-metrics { display:grid !important; grid-template-columns:repeat(3,minmax(0,1fr)) !important; gap:12px !important; align-items:stretch; margin:0 0 16px !important; }
+.metric-grid.chef-metrics > .metric-card { width:100%; min-width:0; min-height:124px !important; margin:0 !important; padding:18px !important; }
+.content-grid.chef-content { display:grid !important; grid-template-columns:minmax(0,1.5fr) minmax(0,1fr) !important; gap:14px !important; align-items:start; }
+.content-grid.chef-content > .panel { min-width:0; width:100%; margin:0; }
+.metric-grid:not(.chef-metrics) { gap:12px !important; }
+.stock-list { display:flex; flex-direction:column; gap:8px; background:transparent; }
+.kitchen-stock-page .stock-table-panel { padding:18px !important; }
+.kitchen-stock-page .stock-table-panel .panel-head { margin:0 0 12px !important; padding:0 0 12px; border-bottom:1px solid #eee9e3; }
+.kitchen-stock-page .stock-list > .stock-item { display:grid !important; grid-template-columns:minmax(160px,1fr) 140px 180px !important; align-items:center !important; gap:12px !important; min-height:64px !important; padding:10px 14px !important; margin:0 !important; background:#fff; border:1px solid #eee9e3; border-radius:9px; }
+.kitchen-stock-page .stock-info { display:flex; flex-direction:column; align-items:flex-start; gap:3px; text-align:left; }
+.kitchen-stock-page .stock-status { display:flex; align-items:center; justify-content:flex-start; }
+.kitchen-stock-page .stock-actions { display:flex; align-items:center; justify-content:flex-end; gap:8px; }
+@media (max-width:1100px) {
+ .metric-grid.chef-metrics { grid-template-columns:repeat(3,minmax(0,1fr)) !important; }
+ .content-grid.chef-content { grid-template-columns:1fr !important; }
+}
+@media (max-width:820px) {
+ .sidebar { width:190px !important; padding:12px 9px !important; }
+ .main-area { margin-left:190px !important; width:calc(100% - 190px) !important; }
+ .page-wrap { padding:16px !important; }
+ .metric-grid.chef-metrics { grid-template-columns:repeat(2,minmax(0,1fr)) !important; }
+ .metric-grid.chef-metrics > .metric-card:last-child { grid-column:1 / -1; }
+ .kitchen-stock-page .stock-list > .stock-item { grid-template-columns:minmax(0,1fr) auto !important; }
+ .kitchen-stock-page .stock-status { grid-column:1; grid-row:2; }
+ .kitchen-stock-page .stock-actions { grid-column:2; grid-row:1 / span 2; }
+}
+@media (max-width:600px) {
+ .sidebar { position:relative !important; inset:auto !important; width:100% !important; }
+ .main-area { margin:0 !important; width:100% !important; }
+ .metric-grid.chef-metrics { grid-template-columns:1fr !important; }
+ .metric-grid.chef-metrics > .metric-card:last-child { grid-column:auto; }
+ .kitchen-stock-page .stock-list > .stock-item { padding:10px !important; }
+}

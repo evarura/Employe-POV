@@ -1,8 +1,11 @@
-﻿<div class="login-shell" *ngIf="!role">
+<div class="login-shell" *ngIf="!role">
 
   <div class="login-brand">
+
     <div class="brand-mark">S.</div>
+
     <span>SANCTUM <small>STAFF</small></span>
+
   </div>
 
   <div class="login-content">
@@ -10,20 +13,29 @@
     <div class="eyebrow">RESTAURANT MANAGEMENT SYSTEM</div>
 
     <h1>
+
       Welcome<br>
+
       <em>back.</em>
+
     </h1>
 
     <p class="login-copy">
+
       Sign in to your SANCTUM employee account.
+
       Your credentials will automatically open your assigned workspace.
+
     </p>
 
     <div class="login-card">
 
       <div class="login-card-heading">
+
         <h2>Employee Login</h2>
+
         <p>Enter your employee credentials to continue.</p>
+
       </div>
 
       <form (ngSubmit)="login()">
@@ -31,43 +43,69 @@
         <label class="login-label">EMPLOYEE ID</label>
 
         <input
+
           type="text"
+
           name="loginId"
+
           [(ngModel)]="loginId"
+
           placeholder="Enter your employee ID"
+
           autocomplete="username"
+
           required
+
         >
 
         <label class="login-label">PASSWORD</label>
 
         <input
+
           type="password"
+
           name="loginPassword"
+
           [(ngModel)]="loginPassword"
+
           placeholder="Enter your password"
+
           autocomplete="current-password"
+
           required
+
         >
 
         <div class="login-error" *ngIf="loginError">
+
           {{ loginError }}
+
         </div>
 
         <button
+
           type="submit"
+
           class="login-submit"
+
           [disabled]="!loginId.trim() || !loginPassword"
+
         >
+
           Sign in to SANCTUM
+
           <span>→</span>
+
         </button>
 
       </form>
 
       <div class="login-security">
+
         <span class="pulse"></span>
+
         Secure employee workspace
+
       </div>
 
     </div>
@@ -77,19 +115,31 @@
       <div class="demo-heading">DEMO ACCESS CREDENTIALS</div>
 
       <div class="demo-account">
+
         <div>
+
           <b>Waiter Account</b>
+
           <small>waiter01 / Waiter@123</small>
+
         </div>
+
         <span>FLOOR</span>
+
       </div>
 
       <div class="demo-account">
+
         <div>
+
           <b>Chef Account</b>
+
           <small>chef01 / Chef@123</small>
+
         </div>
+
         <span>KITCHEN</span>
+
       </div>
 
     </div>
@@ -97,81 +147,123 @@
   </div>
 
   <div class="login-bottom">
+
     <span>COFFEE. CONSOLES. CROSSFIRE.</span>
+
     <span>BUILT FOR THE FLOOR & THE PASS.</span>
+
   </div>
 
 </div>
 
 <div class="app-shell" *ngIf="role">
+
   <aside class="sidebar" [class.chef-sidebar]="role === 'chef'">
+
     <div class="side-brand"><div class="brand-mark">S.</div><div><b>SANCTUM</b><small>STAFF WORKSPACE</small></div></div>
+
     <div class="workspace-tag"><span class="pulse"></span>{{ role === 'waiter' ? 'FLOOR SERVICE' : 'KITCHEN SERVICE' }}</div>
+
     <div class="nav-caption">WORKSPACE</div>
+
     <ng-container *ngIf="role === 'waiter'; else chefNav">
 
   <button class="nav-item" [class.active]="page === 'dashboard'" (click)="navigate('dashboard')">
+
     <span class="nav-icon">
+
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+
         <rect x="3" y="3" width="8" height="8" rx="1"/>
+
         <rect x="13" y="3" width="8" height="5" rx="1"/>
+
         <rect x="13" y="10" width="8" height="11" rx="1"/>
+
         <rect x="3" y="13" width="8" height="8" rx="1"/>
+
       </svg>
+
     </span>
+
     Overview
+
   </button>
 
   <button class="nav-item" [class.active]="page === 'tables'" (click)="navigate('tables')">
+
     <span class="nav-icon">
+
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+
         <rect x="3" y="4" width="18" height="10" rx="2"/>
+
         <path d="M7 14v6M17 14v6M3 9h18"/>
+
       </svg>
+
     </span>
-    My tables <i>12</i>
+
+    Tables <i>{{ tables.length }}</i>
+
   </button>
 
   <button class="nav-item" [class.active]="page === 'new-order'" (click)="navigate('new-order')">
+
     <span class="nav-icon">
+
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+
         <path d="M12 5v14M5 12h14"/>
+
         <circle cx="12" cy="12" r="9"/>
+
       </svg>
+
     </span>
+
     Create order
+
   </button>
 
   <button class="nav-item" [class.active]="page === 'orders'" (click)="navigate('orders')">
-    <span class="nav-icon">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-        <path d="M8 6h13M8 12h13M8 18h13"/>
-        <circle cx="3.5" cy="6" r=".8" fill="currentColor"/>
-        <circle cx="3.5" cy="12" r=".8" fill="currentColor"/>
-        <circle cx="3.5" cy="18" r=".8" fill="currentColor"/>
-      </svg>
-    </span>
-    Active orders <i>{{ activeOrders.length }}</i>
-  </button>
 
-  <button class="nav-item" [class.active]="page === 'ready'" (click)="navigate('ready')">
     <span class="nav-icon">
+
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-        <path d="m5 12 5 5L20 7"/>
+
+        <path d="M8 6h13M8 12h13M8 18h13"/>
+
+        <circle cx="3.5" cy="6" r=".8" fill="currentColor"/>
+
+        <circle cx="3.5" cy="12" r=".8" fill="currentColor"/>
+
+        <circle cx="3.5" cy="18" r=".8" fill="currentColor"/>
+
       </svg>
+
     </span>
-    Ready to serve
-    <i class="orange-count">{{ readyOrders.length }}</i>
+
+    Active orders <i>{{ activeOrders.length }}</i>
+
   </button>
 
   <button class="nav-item" [class.active]="page === 'history'" (click)="navigate('history')">
+
     <span class="nav-icon">
+
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+
         <circle cx="12" cy="12" r="9"/>
+
         <path d="M12 7v5l3 2"/>
+
       </svg>
+
     </span>
+
     Order history
+
   </button>
 
 </ng-container>
@@ -179,168 +271,289 @@
 <ng-template #chefNav>
 
   <button class="nav-item" [class.active]="page === 'dashboard'" (click)="navigate('dashboard')">
+
     <span class="nav-icon">
+
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+
         <path d="M4 20h16M6 20V9l6-5 6 5v11"/>
+
         <path d="M10 20v-6h4v6"/>
+
       </svg>
+
     </span>
+
     Kitchen overview
+
   </button>
 
   <button class="nav-item" [class.active]="page === 'live-orders'" (click)="navigate('live-orders')">
+
     <span class="nav-icon">
+
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+
         <path d="M4 4h16v16H4z"/>
+
         <path d="M8 9h8M8 13h8M8 17h5"/>
+
       </svg>
+
     </span>
-    Live KOT <i class="orange-count">{{ newOrders.length }}</i>
+
+    Live KOT <i class="orange-count">{{ liveKOT.length }}</i>
+
   </button>
 
-  <button class="nav-item" [class.active]="page === 'preparation'" (click)="navigate('preparation')">
-    <span class="nav-icon">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-        <circle cx="12" cy="12" r="9"/>
-        <path d="M12 7v5l4 2"/>
-      </svg>
-    </span>
-    Preparation <i>{{ preparingOrders.length }}</i>
-  </button>
-
-  <button class="nav-item" [class.active]="page === 'ready'" (click)="navigate('ready')">
-    <span class="nav-icon">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-        <path d="m5 12 5 5L20 7"/>
-      </svg>
-    </span>
-    Ready orders <i>{{ readyOrders.length }}</i>
-  </button>
+  <button class="nav-item" [class.active]="page === 'recent-orders'" (click)="navigate('recent-orders')"><span class="nav-icon">✓</span> Recent orders <i>{{ recentKitchenOrders.length }}</i></button>
 
   <div class="nav-caption nav-spaced">KITCHEN CONTROL</div>
 
   <button class="nav-item" [class.active]="page === 'stock'" (click)="navigate('stock')">
+
     <span class="nav-icon">
+
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+
         <path d="M4 7 12 3l8 4v10l-8 4-8-4z"/>
+
         <path d="m4 7 8 4 8-4M12 11v10"/>
+
       </svg>
+
     </span>
+
     Kitchen stock <i class="orange-count">{{ lowStock.length }}</i>
+
   </button>
 
 </ng-template>
+
     <div class="sidebar-bottom">
+
       <div class="shift-card">
+
         <span class="shift-dot"></span>
-        <div>
-          <b>Lunch shift</b>
-          <small>10:00 AM – 4:00 PM</small>
-        </div>
+
+        
+
       </div>
 
       <div class="profile-row">
+
         <div class="avatar">{{ role === 'waiter' ? 'AM' : 'CJ' }}</div>
+
         <div class="profile-info">
+
           <b>{{ staffName }}</b>
+
           <small>{{ role === 'waiter' ? 'Service staff' : 'Head chef' }}</small>
+
         </div>
+
         <button class="logout" (click)="logout()" title="Switch workspace">⇥</button>
+
       </div>
+
     </div>
+
   </aside>
 
   <main class="main-area">
+
     <header class="topbar">
-      
+
       <div class="breadcrumb">SANCTUM <span>/</span> {{ role === 'waiter' ? 'FLOOR' : 'KITCHEN' }} <span>/</span> <b>{{ page.replace('-', ' ') | uppercase }}</b></div>
-      <div class="top-actions"><span class="service-live"><i></i> SERVICE LIVE</span><span class="top-date">{{ 'Today' }} · {{  '12 Nov 2026' }}</span><button class="switch-role" (click)="logout()">Switch POV ↗</button></div>
+
+      <div class="top-actions"><span class="service-live"><i></i> SERVICE LIVE</span><span class="top-date">Today · {{ todayLabel }}</span><button class="switch-role" (click)="logout()">Switch POV ↗</button></div>
+
     </header>
 
     <section class="page-wrap" *ngIf="page === 'dashboard' && role === 'waiter'">
-      <div class="page-heading"><div><div class="eyebrow">THURSDAY · LUNCH SERVICE</div><h1>Good afternoon, Alex<span>.</span></h1><p>Here's what's happening across your section today.</p></div><button class="primary-btn" (click)="navigate('new-order')">＋ Create new order</button></div>
+
+      <div class="page-heading"><div><div class="eyebrow">FLOOR SERVICE</div><h1>Floor overview<span>.</span></h1><p>Here's what's happening across your section today.</p></div><button class="primary-btn" (click)="navigate('new-order')">＋ Create new order</button></div>
+
       <div class="metric-grid">
-        <div class="metric-card"><span>ASSIGNED TABLES</span><strong>8<span>/12</span></strong><small>4 tables available</small><div class="metric-icon">▤</div></div>
-        <div class="metric-card"><span>ACTIVE ORDERS</span><strong>{{ activeOrders.length + 3 }}</strong><small>Across your section</small><div class="metric-icon">≡</div></div>
+
+        <div class="metric-card"><span>ASSIGNED TABLES</span><strong>{{ activeDiningTables }}<span>/{{ tables.length }}</span></strong><small>{{ tables.length - activeDiningTables }} tables available</small><div class="metric-icon">▤</div></div>
+
+        <div class="metric-card"><span>ACTIVE ORDERS</span><strong>{{ activeOrders.length }}</strong><small>Across your section</small><div class="metric-icon">≡</div></div>
+
         <div class="metric-card"><span>READY TO SERVE</span><strong class="orange-text">{{ readyOrders.length }}</strong><small>Needs your attention</small><div class="metric-icon">✓</div></div>
-        <div class="metric-card"><span>SECTION SALES</span><strong>₹8,460</strong><small class="positive">↑ 12% vs yesterday</small><div class="metric-icon">₹</div></div>
+
       </div>
+
       <div class="content-grid">
-        <div class="panel table-panel"><div class="panel-head"><div><h2>My tables</h2><p>Live floor status · 8 assigned</p></div><button class="text-btn" (click)="navigate('tables')">View floor ↗</button></div>
+
+        <div class="panel table-panel"><div class="panel-head"><div><h2>Tables</h2><p>Live dining-table status</p></div><button class="text-btn" (click)="navigate('tables')">View floor ↗</button></div>
+
           <div class="table-mini-grid"><button *ngFor="let t of tables.slice(0,8)" class="table-tile" [class]=" 'table-tile ' + t.status.toLowerCase()" (click)="setTable(t.id)"><span>{{ t.id }}</span><b>{{ t.status }}</b><small>{{ t.seats }} seats</small><strong *ngIf="t.amount">₹{{ t.amount }}</strong></button></div>
-          <div class="legend"><span><i class="green-dot"></i> Occupied</span><span><i class="gray-dot"></i> Available</span><span><i class="amber-dot"></i> Reserved</span></div>
+
+          <div class="legend"><span><i class="green-dot"></i> Occupied</span><span><i class="gray-dot"></i> Available</span></div>
+
         </div>
+
         <div class="panel"><div class="panel-head"><div><h2>Needs your attention</h2><p>Live kitchen updates</p></div><span class="live-pill">LIVE</span></div>
+
           <div class="attention-list" *ngIf="readyOrders.length; else noReady"><div class="attention-item" *ngFor="let o of readyOrders"><div class="ready-icon">✓</div><div class="attention-copy"><b>Order #{{ o.id }} · {{ o.table }}</b><small>{{ o.items.length }} items · Ready for pickup</small></div><button class="small-dark" (click)="markServed(o)">Served</button></div></div>
+
           <ng-template #noReady><div class="empty-small">You're all caught up. New kitchen updates will appear here.</div></ng-template>
+
           <div class="quick-tip"><b>Shift reminder</b><p>Confirm every item with the guest before sending an order to the kitchen.</p></div>
+
         </div>
+
       </div>
+
       <div class="panel recent-panel"><div class="panel-head"><div><h2>Recent orders</h2><p>Latest activity from your section</p></div><button class="text-btn" (click)="navigate('orders')">All orders ↗</button></div><div class="table-scroll"><table><thead><tr><th>ORDER</th><th>TABLE</th><th>ITEMS</th><th>TIME</th><th>STATUS</th><th>TOTAL</th></tr></thead><tbody><tr *ngFor="let o of orders.slice(0,4)"><td class="strong">#{{ o.id }}</td><td>{{ o.table }}</td><td>{{ o.items.length }} items</td><td>{{ orderAge(o) }} min ago</td><td><span class="status" [class]=" 'status ' + o.status.toLowerCase()">{{ o.status }}</span></td><td class="strong">₹{{ orderTotal(o) }}</td></tr></tbody></table></div></div>
+
     </section>
 
     <section class="page-wrap" *ngIf="page === 'dashboard' && role === 'chef'">
-      <div class="page-heading"><div><div class="eyebrow">THURSDAY · LUNCH SERVICE</div><h1>Kitchen command<span>.</span></h1><p>Keep the pass moving. Here's your kitchen at a glance.</p></div><div class="kitchen-open"><i></i> KITCHEN OPEN</div></div>
-      <div class="metric-grid chef-metrics"><div class="metric-card"><span>NEW TICKETS</span><strong>{{ newOrders.length }}</strong><small>Awaiting acceptance</small><div class="metric-icon">▣</div></div><div class="metric-card"><span>IN PREPARATION</span><strong>{{ preparingOrders.length }}</strong><small>On the line now</small><div class="metric-icon">◷</div></div><div class="metric-card"><span>READY AT PASS</span><strong class="orange-text">{{ readyOrders.length }}</strong><small>Waiting for pickup</small><div class="metric-icon">✓</div></div><div class="metric-card"><span>COMPLETED TODAY</span><strong>{{ 42 + servedOrders.length }}</strong><small class="positive">Kitchen running well</small><div class="metric-icon">↗</div></div></div>
-      <div class="content-grid chef-content"><div class="panel dark-panel"><div class="panel-head"><div><h2>Incoming tickets</h2><p>New orders from the floor</p></div><button class="text-btn" (click)="navigate('live-orders')">Open KOT ↗</button></div><div *ngIf="newOrders.length; else noTickets"><div class="incoming-row" *ngFor="let o of newOrders"><div class="ticket-number">#{{ o.id }}</div><div class="ticket-copy"><b>{{ o.table }} <span>· {{ o.items.length }} items</span></b><small>{{ o.waiter }} · {{ orderAge(o) }} min ago</small></div><button class="orange-btn compact" (click)="updateStatus(o, 'Accepted')">Accept</button></div></div><ng-template #noTickets><div class="empty-small">No new tickets. The kitchen is clear.</div></ng-template></div>
+
+      <div class="page-heading"><div><h1>Kitchen command<span>.</span></h1><p>Keep the pass moving. Here's your kitchen at a glance.</p></div><div class="kitchen-open"><i></i> KITCHEN OPEN</div></div>
+
+      <div class="metric-grid chef-metrics">
+
+
+
+  <div class="metric-card">
+
+    <span>ACTIVE KOT</span>
+
+    <strong>{{ liveKOT.length }}</strong>
+
+    <small>Orders currently in kitchen</small>
+
+    <div class="metric-icon">▣</div>
+
+  </div>
+
+
+
+  <div class="metric-card">
+
+    <span>PREPARING</span>
+
+    <strong>{{ preparingOrders.length }}</strong>
+
+    <small>Orders being prepared</small>
+
+    <div class="metric-icon">◷</div>
+
+  </div>
+
+
+
+  <div class="metric-card">
+
+    <span>COMPLETED TODAY</span>
+
+    <strong>{{ completedToday }}</strong>
+
+    <small>Completed kitchen tickets</small>
+
+    <div class="metric-icon">✓</div>
+
+  </div>
+
+
+
+</div>
+
+      <div class="content-grid chef-content"><div class="panel dark-panel"><div class="panel-head"><div><h2>Incoming tickets</h2><p>New orders from the floor</p></div><button class="text-btn" (click)="navigate('live-orders')">Open KOT ↗</button></div><div *ngIf="newOrders.length; else noTickets"><div class="incoming-row" *ngFor="let o of newOrders"><div class="ticket-number">#{{ o.id }}</div><div class="ticket-copy"><b>{{ o.table }} <span>· {{ o.items.length }} items</span></b><small>{{ o.waiter }} · {{ orderAge(o) }} min ago</small></div><button class="orange-btn compact" (click)="nextChefAction(o)">Start Preparing</button></div></div><ng-template #noTickets><div class="empty-small">No new tickets. The kitchen is clear.</div></ng-template></div>
+
         <div class="panel"><div class="panel-head"><div><h2>Stock watch</h2><p>Ingredients below par level</p></div><span class="alert-count">{{ lowStock.length }} alerts</span></div><div class="stock-watch" *ngFor="let s of lowStock"><div class="stock-watch-icon">!</div><div class="stock-watch-copy"><b>{{ s.name }}</b><small>{{ s.qty }} {{ s.unit }} remaining · Min {{ s.min }} {{ s.unit }}</small></div><button class="text-btn" (click)="requestStock(s)">Request</button></div><div class="empty-small" *ngIf="!lowStock.length">All key ingredients are above par.</div></div></div>
-      <div class="panel recent-panel"><div class="panel-head"><div><h2>Kitchen flow</h2><p>Orders currently moving through the line</p></div><button class="text-btn" (click)="navigate('preparation')">View preparation ↗</button></div><div class="flow-grid"><div><span class="flow-num">{{ newOrders.length }}</span><b>New</b><small>Awaiting acceptance</small></div><div><span class="flow-num">{{ countStatus('Accepted') + countStatus('Preparing') }}</span><b>On the line</b><small>Being prepared</small></div><div><span class="flow-num orange-text">{{ readyOrders.length }}</span><b>At the pass</b><small>Ready for pickup</small></div><div><span class="flow-num">{{ servedOrders.length + 42 }}</span><b>Completed</b><small>Served today</small></div></div></div>
-    </section>
+
+</section>
 
     <section class="page-wrap" *ngIf="page === 'tables'">
 
   <!-- PAGE HEADER -->
+
   <div class="page-heading">
+
     <div>
+
       <div class="eyebrow">FLOOR MANAGEMENT</div>
-      <h1>My tables<span>.</span></h1>
+
+      <h1>Tables<span>.</span></h1>
+
       <p>Manage dining tables, gaming PCs and PlayStation stations.</p>
+
     </div>
 
     <div class="legend">
+
       <span><i class="green-dot"></i> Occupied</span>
+
       <span><i class="gray-dot"></i> Available</span>
-      <span><i class="amber-dot"></i> Reserved</span>
+
+      
+
     </div>
+
   </div>
 
   <!-- CATEGORY TABS -->
+
   <div class="my-tables-tabs">
+
     <button
+
       *ngFor="let category of myTablesCategories"
+
       [class.selected]="myTablesCategory === category"
+
       (click)="selectMyTablesCategory(category)">
 
       <span>
+
         {{ category === 'Dining Tables' ? '▦' :
+
            category === 'PC Gaming' ? '▣' : '🎮' }}
+
       </span>
 
       {{ category }}
 
       <small *ngIf="category === 'Dining Tables'">
+
         {{ tables.length }}
+
       </small>
 
       <small *ngIf="category !== 'Dining Tables'">
+
         {{ countGamingStations(category) }}
+
       </small>
 
     </button>
+
   </div>
 
   <!-- DINING TABLES -->
+
   <div class="floor-grid" *ngIf="myTablesCategory === 'Dining Tables'">
 
     <button
+
       *ngFor="let t of tables"
+
       class="floor-table"
+
       [class]=" 'floor-table ' + t.status.toLowerCase()"
+
       (click)="setTable(t.id)">
 
       <div class="floor-table-top">
+
         <span>{{ t.id }}</span>
+
         <span>{{ t.seats }} seats</span>
+
       </div>
 
       <div class="table-symbol">▦</div>
@@ -350,12 +563,19 @@
       <strong *ngIf="t.amount">₹{{ t.amount }}</strong>
 
       <small>
+
         {{
+
           t.status === 'Available' ? 'Tap to seat guests' :
+
           t.status === 'Occupied' ? 'Tap to add items' :
+
           t.status === 'Reserved' ? 'Reservation' :
+
           'Being reset'
+
         }}
+
       </small>
 
     </button>
@@ -363,31 +583,47 @@
   </div>
 
   <!-- GAMING STATIONS -->
+
   <div
+
     class="gaming-station-grid"
+
     *ngIf="myTablesCategory !== 'Dining Tables'">
 
     <article
+
       class="gaming-station-card"
+
       *ngFor="let station of getGamingStations(myTablesCategory)"
+
       [class.occupied]="station.status === 'Occupied'"
+
       [class.available]="station.status === 'Available'">
 
       <!-- CARD HEADER -->
+
       <div class="gaming-card-header">
 
         <div class="gaming-station-icon">
+
           {{ station.type === 'PC Gaming' ? '▣' : '🎮' }}
+
         </div>
 
         <div class="gaming-station-title">
+
           <h3>{{ station.id }}</h3>
+
           <small>{{ station.type }}</small>
+
         </div>
 
         <span
+
           class="gaming-status"
+
           [class.occupied-status]="station.status === 'Occupied'"
+
           [class.available-status]="station.status === 'Available'">
 
           {{ station.status }}
@@ -397,59 +633,87 @@
       </div>
 
       <!-- CUSTOMER DETAILS -->
+
       <div class="gaming-customer">
 
         <div>
+
           <small>CUSTOMER</small>
+
           <b>{{ station.customer || 'No customer assigned' }}</b>
+
         </div>
 
         <div>
+
           <small>CURRENT GAME</small>
+
           <b>{{ station.game || 'Not in use' }}</b>
+
         </div>
 
       </div>
 
       <!-- SESSION INFORMATION -->
+
       <div class="gaming-session">
 
         <div>
+
           <small>SESSION</small>
+
           <strong>
+
             {{ station.status === 'Occupied'
-              ? station.sessionMinutes + ' min'
+
+              ? remainingMinutes(station) + ' min remaining'
+
               : '--' }}
+
           </strong>
+
         </div>
 
         <div>
+
           <small>FOOD ORDERS</small>
+
           <strong>{{ station.orders }}</strong>
+
         </div>
 
       </div>
 
       <!-- SELF ORDERING -->
+
       <div class="gaming-self-order">
 
         <div>
+
           <b>Customer self-ordering</b>
+
           <small>Order food directly from this station</small>
+
         </div>
 
         <span [class.enabled]="station.selfOrdering">
+
           {{ station.selfOrdering ? 'ENABLED' : 'DISABLED' }}
+
         </span>
 
       </div>
 
       <!-- ACTIONS -->
+
       <div class="gaming-card-actions">
 
         <button
+
           class="gaming-order-btn"
+
           [disabled]="station.status !== 'Occupied'"
+
           (click)="setGamingStation(station.id)">
 
           Create order
@@ -457,8 +721,11 @@
         </button>
 
         <button
+
           class="gaming-simulate-btn"
+
           [disabled]="station.status !== 'Occupied' || !station.selfOrdering"
+
           (click)="simulateCustomerOrder(station)">
 
           Simulate customer order +
@@ -474,44 +741,170 @@
 </section>
 
     <section class="page-wrap" *ngIf="page === 'new-order' && role === 'waiter'">
-      <div class="page-heading"><div><div class="eyebrow">FLOOR SERVICE / NEW TICKET</div><h1>Create an order<span>.</span></h1><p>Build the guest's order and send it straight to the kitchen.</p></div><div class="table-select"><label>TABLE</label><select [(ngModel)]="selectedTable"><option *ngFor="let t of tables" [value]="t.id">{{ t.id }}</option></select></div></div>
-      <div class="order-builder"><div class="menu-area"><div class="menu-toolbar"><div class="category-tabs"><button *ngFor="let c of categories" [class.selected]="activeCategory === c" (click)="activeCategory = c">{{ c }}</button></div><input class="search-input" [(ngModel)]="searchTerm" placeholder="⌕  Search menu"></div><div class="menu-grid"><button class="menu-card" *ngFor="let item of filteredMenu" (click)="addToCart(item)"><div class="food-emoji">{{ item.emoji }}</div><div class="menu-card-info"><b>{{ item.name }}</b><small>{{ item.category }}</small><strong>₹{{ item.price }}</strong></div><span class="add-circle">＋</span></button></div></div>
-        <aside class="cart-panel"><div class="cart-head"><div><h2>Order summary</h2><p>Table {{ selectedTable }}</p></div><span class="cart-count">{{ cart.length }}</span></div><div class="cart-lines" *ngIf="cart.length; else emptyCart"><div class="cart-line" *ngFor="let line of cart"><div><b>{{ line.name }}</b><small>₹{{ itemPrice(line.name) }} each</small></div><div class="qty-control"><button (click)="changeQty(line, -1)">−</button><b>{{ line.qty }}</b><button (click)="changeQty(line, 1)">＋</button></div></div></div><ng-template #emptyCart><div class="cart-empty"><span>＋</span><b>Your order is empty</b><small>Add items from the menu to get started.</small></div></ng-template><label class="field-label">SPECIAL INSTRUCTIONS</label><textarea [(ngModel)]="orderNote" placeholder="Allergies, table notes, or service requests..."></textarea><div class="cart-total"><span>Subtotal</span><b>₹{{ cartTotal }}</b></div><button class="primary-btn full-btn" [disabled]="!cart.length" (click)="submitOrder()">Send to kitchen <span>↗</span></button><small class="cart-footnote">A kitchen ticket (KOT) will be created automatically.</small></aside></div>
+
+      <div class="page-heading"><div><div class="eyebrow">FLOOR SERVICE / NEW TICKET</div><h1>{{ editingOrderId !== null ? 'Edit order' : 'Create an order' }}<span>.</span></h1><p>Build the guest's order and send it straight to the kitchen.</p></div><div class="table-select"><label>TABLE</label><select [(ngModel)]="selectedTable"><option *ngFor="let t of tables" [value]="t.id">{{ t.id }}</option><option *ngFor="let station of gamingStations" [value]="station.id">{{ station.id }}</option></select></div></div>
+
+      <div class="order-builder"><div class="menu-area"><div class="menu-toolbar"><button class="small-dark" (click)="openMenuEditor()">Edit menu</button><div class="category-tabs"><button *ngFor="let c of categories" [class.selected]="activeCategory === c" (click)="activeCategory = c">{{ c }}</button></div><input class="search-input" [(ngModel)]="searchTerm" placeholder="⌕  Search menu"></div><div class="menu-grid"><button class="menu-card" *ngFor="let item of filteredMenu" [disabled]="!isMenuAvailable(item.name)" [class.menu-blocked]="!isMenuAvailable(item.name)" (click)="addToCart(item)"><div class="food-emoji">{{ item.emoji }}</div><div class="menu-card-info"><b>{{ item.name }}</b><small>{{ isMenuAvailable(item.name) ? item.category : "Unavailable · ingredient out of stock" }}</small><strong>₹{{ item.price }}</strong></div><span class="add-circle">＋</span></button></div></div>
+
+        <aside class="cart-panel"><div class="cart-head"><div><h2>Order summary</h2><p>Table {{ selectedTable }}</p></div><span class="cart-count">{{ cart.length }}</span></div><div class="cart-lines" *ngIf="cart.length; else emptyCart"><div class="cart-line" *ngFor="let line of cart"><div><b>{{ line.name }}</b><small>₹{{ itemPrice(line.name) }} each</small></div><div class="qty-control"><button (click)="changeQty(line, -1)">−</button><b>{{ line.qty }}</b><button (click)="changeQty(line, 1)">＋</button></div></div></div><ng-template #emptyCart><div class="cart-empty"><span>＋</span><b>Your order is empty</b><small>Add items from the menu to get started.</small></div></ng-template><label class="field-label">SPECIAL INSTRUCTIONS</label><textarea [(ngModel)]="orderNote" placeholder="Allergies, table notes, or service requests..."></textarea><div class="cart-total"><span>Subtotal</span><b>₹{{ cartTotal }}</b></div><button class="primary-btn full-btn" [disabled]="!cart.length" (click)="submitOrder()">{{ editingOrderId !== null ? 'Save order changes' : 'Send to kitchen' }} <span>↗</span></button><button *ngIf="editingOrderId !== null" class="small-dark" style="margin-top:10px;width:100%" (click)="cancelOrderEdit()">Cancel editing</button>
+        <small class="cart-footnote">Changes are saved to the shared kitchen ticket.</small></aside></div>
+
     </section>
 
-    <section class="page-wrap" *ngIf="['orders','live-orders','preparation','ready','history'].includes(page)">
-      <div class="page-heading"><div><div class="eyebrow">{{ role === 'chef' ? 'KITCHEN OPERATIONS' : 'FLOOR SERVICE' }}</div><h1>{{ page === 'live-orders' ? 'Live kitchen tickets' : page === 'preparation' ? 'In preparation' : page === 'ready' ? 'Ready for pickup' : page === 'history' ? 'Order history' : role === 'chef' ? 'All kitchen orders' : 'Active orders' }}<span>.</span></h1><p>{{ role === 'chef' ? 'Every ticket, from acceptance to the pass.' : 'Track every order from the moment it leaves your hands.' }}</p></div><button *ngIf="role === 'waiter'" class="primary-btn" (click)="navigate('new-order')">＋ New order</button><span *ngIf="role === 'chef'" class="kitchen-open"><i></i> LIVE TICKETS</span></div>
-      <div class="order-filters"><span>{{ page === 'history' ? servedOrders.length : page === 'ready' ? readyOrders.length : page === 'preparation' ? preparingOrders.length : page === 'live-orders' ? newOrders.length : activeOrders.length }} ORDERS</span><span class="filter-hint">Updates are shared between waiter and chef workspaces</span></div>
-      <div class="orders-grid" *ngIf="(page === 'history' ? servedOrders : page === 'ready' ? readyOrders : page === 'preparation' ? preparingOrders : page === 'live-orders' ? newOrders : orders).length; else noOrders">
-        <article class="order-card" *ngFor="let o of (page === 'history' ? servedOrders : page === 'ready' ? readyOrders : page === 'preparation' ? preparingOrders : page === 'live-orders' ? newOrders : orders); trackBy: trackByOrder">
-          <div class="order-card-head"><div><span class="order-id">#{{ o.id }}</span><span class="status" [class]=" 'status ' + o.status.toLowerCase()">{{ o.status }}</span></div><span class="order-time">{{ orderAge(o) }} min ago</span></div>
-          <div class="order-table">{{ o.table }} <small>· {{ o.waiter }}</small></div>
-          <div class="order-items"><div *ngFor="let item of o.items"><b>{{ item.qty }}×</b> {{ item.name }} <small *ngIf="item.note">{{ item.note }}</small></div></div>
-          <div class="order-note" *ngIf="o.note">Note: {{ o.note }}</div>
-          <div class="order-card-foot"><b>₹{{ orderTotal(o) }}</b><ng-container *ngIf="role === 'chef' && o.status !== 'Ready' && o.status !== 'Served'"><button class="orange-btn" (click)="nextChefAction(o)">{{ o.status === 'New' ? 'Accept ticket' : o.status === 'Accepted' ? 'Start preparing' : 'Mark ready' }} →</button></ng-container><button class="small-dark" *ngIf="role === 'waiter' && o.status === 'Ready'" (click)="markServed(o)">Mark served ✓</button><span *ngIf="o.status === 'Served'" class="served-label">✓ Served</span></div>
-        </article>
+    <section class="page-wrap" *ngIf="['orders','live-orders','recent-orders','history'].includes(page)">
+
+  <div class="page-heading"><div><div class="eyebrow">{{ role === 'chef' ? 'KITCHEN OPERATIONS' : 'FLOOR SERVICE' }}</div>
+
+  <h1>{{ page === 'live-orders' ? 'Live KOT' : page === 'recent-orders' ? 'Recent orders' : page === 'history' ? 'Order history' : 'Active orders' }}<span>.</span></h1>
+
+  <p>{{ role === 'chef' ? 'Manage each ticket in one place.' : 'Track orders from the floor to the kitchen.' }}</p></div>
+
+  <button *ngIf="role === 'waiter'" class="primary-btn" (click)="navigate('new-order')">＋ New order</button></div>
+
+  <div class="order-filters"><span>{{ visibleOrders.length }} ORDERS</span><span class="filter-hint">Live updates across both workspaces</span></div>
+
+  <div class="orders-grid" *ngIf="visibleOrders.length; else noOrders">
+
+    <article class="order-card" *ngFor="let o of visibleOrders; trackBy: trackByOrder">
+
+      <div class="order-card-head"><div><span class="order-id">#{{ o.id }}</span> <span class="status" [class]="'status ' + o.status.toLowerCase()">{{ o.status === 'Ready' && role === 'chef' ? 'Done' : o.status }}</span></div><span class="order-time">{{ orderAge(o) }} min ago</span></div>
+
+      <div class="order-table">{{ o.table }} <small>· {{ o.waiter }}</small></div>
+
+      <div class="order-items"><div class="order-item-row" *ngFor="let item of o.items">
+          <span><b>{{ item.qty }}×</b> {{ item.name }} <small *ngIf="item.note">{{ item.note }}</small></span>
+          <button type="button" *ngIf="role === 'waiter' && page === 'orders'" (click)="openComplaint(o,item)" title="Record complaint and remove from bill">Flag item</button>
+        </div></div>
+
+      <div class="order-note" *ngIf="o.note">Note: {{ o.note }}</div>
+
+      <div class="order-card-foot"><b *ngIf="page !== 'history'">₹{{ orderTotal(o) }}</b>
+
+        <button
+
+  class="orange-btn"
+  *ngIf="role === 'chef' && (o.status === 'New' || o.status === 'Accepted' || o.status === 'Preparing')"
+  (click)="nextChefAction(o)">
+
+
+
+  {{ o.status === 'Preparing'
+
+      ? 'Done'
+
+      : 'Start Preparing' }}
+
+
+
+</button>
+
+        <button class="small-dark" *ngIf="role === 'waiter' && page === 'orders' && o.status !== 'Served'" (click)="editOrder(o)">Edit order</button>
+        <button class="small-dark" *ngIf="role === 'waiter' && o.status === 'Ready'" (click)="markServed(o)">Mark served ✓</button>
+
+        <span *ngIf="o.status === 'Served'" class="served-label">✓ Served</span>
+
       </div>
-      <ng-template #noOrders><div class="empty-state"><span>✓</span><h3>Nothing on the board</h3><p>New orders will show up here as soon as they're submitted.</p></div></ng-template>
-    </section>
+
+    </article>
+
+  </div>
+
+  <ng-template #noOrders><div class="empty-state"><h3>Nothing on the board</h3><p>Orders will appear here when available.</p></div></ng-template>
+
+</section>
 
     <section class="page-wrap" *ngIf="page === 'recipes'">
+
       <div class="page-heading"><div><div class="eyebrow">KITCHEN CONTROL</div><h1>Recipe book<span>.</span></h1><p>Standard portions, ingredient requirements and estimated food cost.</p></div><span class="count-chip">{{ recipes.length }} RECIPES</span></div>
+
       <div class="recipe-grid"><article class="recipe-card" *ngFor="let r of recipes"><div class="recipe-top"><span class="recipe-icon">♨</span><span class="food-cost">{{ (r.cost / r.price * 100).toFixed(1) }}% FOOD COST</span></div><h3>{{ r.name }}</h3><p>{{ r.ingredients }}</p><div class="recipe-bottom"><div><small>INGREDIENT COST</small><b>₹{{ r.cost }}</b></div><div><small>SELLING PRICE</small><b>₹{{ r.price }}</b></div><div><small>GROSS MARGIN</small><b class="positive">₹{{ r.price - r.cost }}</b></div></div></article></div>
+
     </section>
 
-    <section class="page-wrap" *ngIf="page === 'stock'">
-      <div class="page-heading"><div><div class="eyebrow">KITCHEN CONTROL</div><h1>Kitchen stock<span>.</span></h1><p>Keep an eye on ingredients available to the kitchen.</p></div><span class="alert-count">{{ lowStock.length }} LOW STOCK ALERTS</span></div>
-      <div class="panel stock-table-panel"><div class="panel-head"><div><h2>Ingredient availability</h2><p>Live demo quantities · Updated when wastage is recorded</p></div></div><div class="table-scroll"><table><thead><tr><th>INGREDIENT</th><th>AVAILABLE</th><th>PAR LEVEL</th><th>STOCK LEVEL</th><th>STATUS</th><th></th></tr></thead><tbody><tr *ngFor="let s of stock"><td class="strong">{{ s.name }}</td><td>{{ s.qty }} {{ s.unit }}</td><td>{{ s.min }} {{ s.unit }}</td><td><div class="stock-bar"><i [style.width.%]="Math.min(100, s.qty / (s.min * 2) * 100)"></i></div></td><td><span class="status" [class]="s.qty < s.min ? 'status new' : 'status served'">{{ s.qty < s.min ? 'Low stock' : 'In stock' }}</span></td><td><button class="text-btn" (click)="requestStock(s)">Request stock +</button></td></tr></tbody></table></div></div>
-      <div class="info-banner"><b>Stock control tip</b><span>Record every issue and wastage entry so the system's available quantity stays close to the physical count.</span></div>
-    </section>
+    <section class="page-wrap kitchen-stock-page" *ngIf="page === 'stock'">
+  <header class="page-heading">
+    <div>
+      <div class="eyebrow">KITCHEN CONTROL</div>
+      <h1>Kitchen stock<span>.</span></h1>
+      <p>Monitor ingredients and manage stock alerts.</p>
+    </div>
+    <span class="alert-count">{{ lowStock.length }} LOW STOCK ALERTS</span>
+  </header>
 
-    <section class="page-wrap" *ngIf="page === 'wastage'">
+  <div class="panel stock-table-panel">
+    <div class="panel-head">
+      <div>
+        <h2>Ingredient availability</h2>
+        <p>Current kitchen stock levels</p>
+      </div>
+    </div>
+
+    <div class="stock-list" role="list">
+      <div class="stock-item" role="listitem" *ngFor="let s of stock">
+        <div class="stock-info">
+          <strong>{{ s.name }}</strong>
+          <span>{{ s.qty }} {{ s.unit }}</span>
+        </div>
+        <div class="stock-status">
+          <span class="stock-badge available" *ngIf="s.qty >= s.min">● In Stock</span>
+          <span class="stock-badge low" *ngIf="s.qty > 0 && s.qty < s.min">● Low Stock</span>
+          <span class="stock-badge spoiled" *ngIf="s.qty <= 0">● Out of Stock</span>
+        </div>
+        <div class="stock-actions">
+          <button type="button" class="flag-icon-btn" *ngIf="s.qty > 0"
+            [attr.aria-label]="'Report spoiled stock for ' + s.name"
+            title="Report spoiled stock" (click)="flagSpoiled(s)">🚩</button>
+          <button type="button" class="low-stock-btn"
+            *ngIf="s.qty > 0 && s.qty < s.min"
+            (click)="requestStock(s)">Low Stock</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="page-wrap" *ngIf="page === 'wastage'">
+
       <div class="page-heading"><div><div class="eyebrow">KITCHEN CONTROL</div><h1>Wastage log<span>.</span></h1><p>Record every loss with a reason. Good data keeps food cost under control.</p></div></div>
+
       <div class="wastage-layout"><div class="panel wastage-form"><div class="panel-head"><div><h2>Record wastage</h2><p>Stock quantity will be adjusted in this demo.</p></div></div><label class="field-label">INGREDIENT</label><select [(ngModel)]="wastageItem"><option *ngFor="let s of stock" [value]="s.name">{{ s.name }}</option></select><label class="field-label">QUANTITY WASTED</label><input type="number" min="0.1" step="0.1" [(ngModel)]="wastageQty"><label class="field-label">REASON</label><select [(ngModel)]="wastageReason"><option>Preparation error</option><option>Expired</option><option>Spoiled</option><option>Overcooked</option><option>Damaged</option></select><button class="primary-btn full-btn" (click)="recordWastage()">＋ Record wastage</button></div>
+
         <div class="panel"><div class="panel-head"><div><h2>Recent entries</h2><p>Today's kitchen wastage activity</p></div><span class="count-chip">{{ wastageLog.length }} ENTRIES</span></div><div class="waste-entry" *ngFor="let w of wastageLog"><div class="waste-icon">⌁</div><div class="waste-copy"><b>{{ w.item }} <span>· {{ w.qty }}</span></b><small>{{ w.reason }} · {{ w.time }}</small></div><span class="waste-tag">RECORDED</span></div></div></div>
+
     </section>
 
-    <footer class="app-footer"><span>SANCTUM STAFF <b>·</b> DEMO ENVIRONMENT</span><span>COFFEE. CONSOLES. CROSSFIRE.</span></footer>
+        <div class="editor-overlay" *ngIf="menuEditorOpen" (click)="menuEditorOpen = false">
+      <div class="editor-dialog" (click)="$event.stopPropagation()">
+        <h2>Manage menu</h2>
+        <div class="editor-fields">
+          <label>Item name <input [(ngModel)]="menuDraft.name"></label>
+          <label>Category <select [(ngModel)]="menuDraft.category"><option>Starters</option><option>Mains</option><option>Drinks</option><option>Desserts</option></select></label>
+          <label>Price (₹) <input type="number" min="0" [(ngModel)]="menuDraft.price"></label>
+          <label>Icon <input [(ngModel)]="menuDraft.emoji"></label>
+        </div>
+        <div class="editor-actions"><button class="small-dark" (click)="menuEditorOpen = false">Cancel</button><button class="primary-btn" (click)="saveMenuItem()">Save item</button></div>
+        <div class="menu-edit-list"><div class="menu-edit-row" *ngFor="let item of menu"><span>{{ item.emoji }} {{ item.name }} · ₹{{ item.price }}</span><button class="small-dark" (click)="openMenuEditor(item)">Edit</button></div></div>
+      </div>
+    </div>
+    <div class="editor-overlay" *ngIf="complaintOrderId !== null" (click)="complaintOrderId = null">
+      <div class="editor-dialog complaint-dialog" (click)="$event.stopPropagation()">
+        <h2>Flag unsatisfactory food</h2>
+        <p>{{ complaintItemName }} · Order #{{ complaintOrderId }}</p>
+        <label>Reason for removal</label>
+        <textarea [(ngModel)]="complaintReason" placeholder="Describe the guest complaint (required)"></textarea>
+        <div class="editor-actions"><button class="small-dark" (click)="complaintOrderId = null">Cancel</button><button class="primary-btn" [disabled]="!complaintReason.trim()" (click)="removeComplainedItem()">Remove from bill</button></div>
+      </div>
+    </div>
+<footer class="app-footer"><span>SANCTUM STAFF <b>·</b> DEMO ENVIRONMENT</span><span>COFFEE. CONSOLES. CROSSFIRE.</span></footer>
+
   </main>
+
   <div class="toast" *ngIf="toast">✓ &nbsp; {{ toast }}</div>
+
 </div>
+
+
+
+
+
+

@@ -23,6 +23,7 @@ interface OrderItem {
   name: string;
   qty: number;
   note?: string;
+  price?: number;
 }
 
 interface Order {
@@ -33,6 +34,7 @@ interface Order {
   created: number;
   waiter: string;
   note?: string;
+  adjustments?: { item: string; qty: number; reason: string; at: number }[];
 }
 
 interface StockItem {
@@ -51,6 +53,8 @@ interface GamingStation {
   orders: number;
   status: 'Occupied' | 'Available';
   selfOrdering: boolean;
+  sessionEndsAt?: number;
+  nextBookingAt?: number;
 }
 
 @Component({
@@ -261,6 +265,43 @@ export class AppComponent implements OnDestroy {
   }
 ];
 
+  // Ingredient dependencies for dishes in this demo. Expand as the recipe catalog grows.
+  readonly recipeIngredients: Record<string, string[]> = {
+    'Chicken Burger': ['Chicken', 'Burger buns', 'Cheese', 'Lettuce'],
+    'Paneer Tikka': ['Paneer'],
+    'Loaded Fries': ['French fries'],
+    'Margherita Pizza': ['Cheese', 'Tomatoes'],
+    'Alfredo Pasta': ['Cheese'],
+    'Chicken Wings': ['Chicken'],
+    'Club Sandwich': ['Burger buns', 'Lettuce']
+  };
+
+  isMenuAvailable(name: string): boolean {
+    return (this.recipeIngredients[name] ?? []).every(ingredient => {
+      const item = this.stock.find(s => s.name === ingredient);
+      return item !== undefined && item.qty > 0;
+    });
+  }
+
+  flagSpoilage(item: StockItem): void {
+    if (item.qty <= 0) return;
+    const quantity = item.qty;
+    if (!window.confirm(`Flag all ${quantity} ${item.unit} of ${item.name} as spoiled? This will write off the entire available quantity and block affected dishes.`)) return;
+    item.qty = 0;
+    this.wastageLog.unshift({
+      item: item.name, qty: `${quantity} ${item.unit}`,
+      reason: 'Spoiled — full stock write-off',
+      time: new Date().toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})
+    });
+    this.persistInventory();
+    this.notify(`${item.name} written off. Related menu items are unavailable.`);
+  }
+
+  private persistInventory(): void {
+    localStorage.setItem('sanctum-demo-stock', JSON.stringify(this.stock));
+    localStorage.setItem('sanctum-demo-wastage', JSON.stringify(this.wastageLog));
+  }
+
   // =====================================================
   // DINING TABLES
   // =====================================================
@@ -270,14 +311,14 @@ export class AppComponent implements OnDestroy {
     { id: 'T02', seats: 4, status: 'Occupied', amount: 458 },
     { id: 'T03', seats: 4, status: 'Occupied', amount: 796 },
     { id: 'T04', seats: 2, status: 'Available', amount: 0 },
-    { id: 'T05', seats: 6, status: 'Reserved', amount: 0 },
+    { id: 'T05', seats: 6, status: 'Available', amount: 0 },
     { id: 'T06', seats: 4, status: 'Occupied', amount: 318 },
-    { id: 'T07', seats: 2, status: 'Cleaning', amount: 0 },
+    { id: 'T07', seats: 2, status: 'Available', amount: 0 },
     { id: 'T08', seats: 4, status: 'Occupied', amount: 688 },
     { id: 'T09', seats: 6, status: 'Available', amount: 0 },
     { id: 'T10', seats: 2, status: 'Available', amount: 0 },
     { id: 'T11', seats: 4, status: 'Available', amount: 0 },
-    { id: 'T12', seats: 4, status: 'Reserved', amount: 0 }
+    { id: 'T12', seats: 4, status: 'Available', amount: 0 }
   ];
 
   // =====================================================
@@ -288,6 +329,7 @@ export class AppComponent implements OnDestroy {
 
     {
       id: 'PC-01',
+      nextBookingAt: Date.now() + 75 * 60000,
       type: 'PC Gaming',
       customer: 'Rahul Sharma',
       game: 'Valorant',
@@ -332,6 +374,7 @@ export class AppComponent implements OnDestroy {
 
     {
       id: 'PS-01',
+      nextBookingAt: Date.now() + 40 * 60000,
       type: 'PlayStation',
       customer: 'Kiran',
       game: 'FIFA 26',
@@ -387,6 +430,143 @@ countGamingStations(category: string): number {
   ).length;
 }
 
+
+  // Floor, menu, session and history controls
+  menuEditorOpen = false;
+  menuEditingId: number | null = null;
+  menuDraft: MenuItem = { id: 0, name: '', category: 'Mains', price: 0, emoji: '🍽️' };
+  editingOrderId: number | null = null;
+  complaintOrderId: number | null = null;
+  complaintItemName = '';
+  complaintReason = '';
+  historyDate = this.localDate(new Date());
+  historyStatus = 'All';
+  currentTime = Date.now();
+  private clockTimer?: ReturnType<typeof setInterval>;
+  extensionMinutes = 30;
+
+  private localDate(date: Date): string {
+    const y = date.getFullYear();
+    const m = String(date.getMonth() + 1).padStart(2, '0');
+    const d = String(date.getDate()).padStart(2, '0');
+    return `${y}-${m}-${d}`;
+  }
+
+  localToday(): string { return this.localDate(new Date(this.currentTime)); }
+
+  get todayLabel(): string {
+    return new Date(this.currentTime).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+  }
+
+  get historyOrders(): Order[] {
+    return this.orders.filter(o =>
+      this.localDate(new Date(o.created)) === this.historyDate &&
+      (this.historyStatus === 'All' || o.status === this.historyStatus)
+    ).sort((a, b) => b.created - a.created);
+  }
+
+  get completedToday(): number {
+    return this.orders.filter(o =>
+      (o.status === 'Ready' || o.status === 'Served') &&
+      this.localDate(new Date(o.created)) === this.localDate(new Date(this.currentTime))
+    ).length;
+  }
+
+  get activeDiningTables(): number {
+    return this.tables.filter(t => t.status === 'Occupied').length;
+  }
+
+  openMenuEditor(item?: MenuItem): void {
+    this.menuEditingId = item?.id ?? null;
+    this.menuDraft = item ? { ...item } : { id: 0, name: '', category: 'Mains', price: 0, emoji: '🍽️' };
+    this.menuEditorOpen = true;
+  }
+
+  saveMenuItem(): void {
+    const name = this.menuDraft.name.trim();
+    const price = Number(this.menuDraft.price);
+    if (!name || !Number.isFinite(price) || price < 0) { this.notify('Enter a valid name and price.'); return; }
+    if (this.menu.some(m => m.name.toLowerCase() === name.toLowerCase() && m.id !== this.menuEditingId)) {
+      this.notify('A menu item with this name already exists.'); return;
+    }
+    if (this.menuEditingId !== null) {
+      const existing = this.menu.find(m => m.id === this.menuEditingId);
+      if (existing) Object.assign(existing, { ...this.menuDraft, name, price });
+    } else {
+      this.menu.push({ ...this.menuDraft, id: Math.max(0, ...this.menu.map(m => m.id)) + 1, name, price });
+    }
+    localStorage.setItem('sanctum-demo-menu', JSON.stringify(this.menu));
+    this.menuEditorOpen = false;
+    this.notify('Menu updated.');
+  }
+
+  editOrder(order: Order): void {
+    if (this.role !== 'waiter' || order.status === 'Served') return;
+    this.editingOrderId = order.id;
+    this.selectedTable = order.table;
+    this.cart = order.items.map(i => ({ ...i }));
+    this.orderNote = order.note ?? '';
+    this.page = 'new-order';
+  }
+
+  cancelOrderEdit(): void {
+    this.editingOrderId = null;
+    this.cart = [];
+    this.orderNote = '';
+    this.page = 'orders';
+  }
+
+  openComplaint(order: Order, item: OrderItem): void {
+    if (this.role !== 'waiter' || order.status === 'Served') return;
+    this.complaintOrderId = order.id;
+    this.complaintItemName = item.name;
+    this.complaintReason = '';
+  }
+
+  removeComplainedItem(): void {
+    const order = this.orders.find(o => o.id === this.complaintOrderId);
+    const reason = this.complaintReason.trim();
+    if (!order || !reason || order.status === 'Served') {
+      this.notify('Provide a complaint reason.'); return;
+    }
+    const line = order.items.find(i => i.name === this.complaintItemName);
+    if (!line) return;
+    if (!window.confirm(`Remove ${line.qty} × ${line.name} from order #${order.id} and its bill?`)) return;
+    order.adjustments ??= [];
+    order.adjustments.push({ item: line.name, qty: line.qty, reason, at: Date.now() });
+    order.items = order.items.filter(i => i !== line);
+    this.save();
+    this.complaintOrderId = null;
+    this.notify('Complaint recorded; item removed from bill.');
+  }
+
+  remainingMinutes(station: GamingStation): number {
+    if (station.status !== 'Occupied') return 0;
+    const end = station.sessionEndsAt ?? (this.currentTime + station.sessionMinutes * 60000);
+    return Math.max(0, Math.ceil((end - this.currentTime) / 60000));
+  }
+
+  canExtend(station: GamingStation, minutes = this.extensionMinutes): boolean {
+    if (station.status !== 'Occupied' || minutes <= 0) return false;
+    const end = station.sessionEndsAt ?? (this.currentTime + station.sessionMinutes * 60000);
+    return !station.nextBookingAt || end + minutes * 60000 <= station.nextBookingAt;
+  }
+
+  extendSession(station: GamingStation): void {
+    const minutes = Number(this.extensionMinutes);
+    if (!this.canExtend(station, minutes)) {
+      this.notify('Extension unavailable: the next booking overlaps.'); return;
+    }
+    const end = station.sessionEndsAt ?? (this.currentTime + station.sessionMinutes * 60000);
+    station.sessionEndsAt = end + minutes * 60000;
+    station.sessionMinutes += minutes;
+    this.saveGamingStations();
+    this.notify(`${station.id} extended by ${minutes} minutes.`);
+  }
+
+  private saveGamingStations(): void {
+    localStorage.setItem('sanctum-demo-gaming', JSON.stringify(this.gamingStations));
+  }
 
   // =====================================================
   // ORDERS
@@ -526,12 +706,18 @@ countGamingStations(category: string): number {
   constructor() {
     this.loadState();
     this.restoreSession();
+    this.clockTimer = setInterval(() => {
+      const previousDate = this.localDate(new Date(this.currentTime));
+      this.currentTime = Date.now();
+      if (previousDate !== this.localDate(new Date(this.currentTime))) this.historyDate = this.localDate(new Date(this.currentTime));
+    }, 15000);
 
     window.addEventListener('storage', this.onStorage);
   }
 
   ngOnDestroy(): void {
     window.removeEventListener('storage', this.onStorage);
+    if (this.clockTimer) clearInterval(this.clockTimer);
 
     if (this.toastTimer) {
       clearTimeout(this.toastTimer);
@@ -539,6 +725,10 @@ countGamingStations(category: string): number {
   }
 
   private onStorage = (event: StorageEvent): void => {
+    if (event.key === 'sanctum-demo-stock' && event.newValue) { try { this.stock = JSON.parse(event.newValue) as StockItem[]; } catch {} }
+    if (event.key === 'sanctum-demo-wastage' && event.newValue) { try { this.wastageLog = JSON.parse(event.newValue); } catch {} }
+    if (event.key === 'sanctum-demo-menu' && event.newValue) { try { this.menu = JSON.parse(event.newValue); } catch {} }
+    if (event.key === 'sanctum-demo-gaming' && event.newValue) { try { this.gamingStations = JSON.parse(event.newValue); } catch {} }
     if (event.key === 'sanctum-demo-orders' && event.newValue) {
       try {
         this.orders = JSON.parse(event.newValue) as Order[];
@@ -554,6 +744,16 @@ countGamingStations(category: string): number {
 
   private loadState(): void {
     try {
+      const savedMenu = localStorage.getItem('sanctum-demo-menu');
+      if (savedMenu) this.menu = JSON.parse(savedMenu);
+      const savedGaming = localStorage.getItem('sanctum-demo-gaming');
+      if (savedGaming) this.gamingStations = JSON.parse(savedGaming);
+      this.gamingStations.forEach(s => {
+        if (s.status === 'Occupied' && !s.sessionEndsAt) s.sessionEndsAt = Date.now() + s.sessionMinutes * 60000;
+      });
+      this.saveGamingStations();
+    } catch { /* Keep demo menu and gaming data */ }
+    try {
       const saved = localStorage.getItem('sanctum-demo-orders');
 
       if (saved) {
@@ -562,6 +762,12 @@ countGamingStations(category: string): number {
     } catch {
       // Keep starter demo orders.
     }
+    try {
+      const stock = localStorage.getItem('sanctum-demo-stock');
+      const waste = localStorage.getItem('sanctum-demo-wastage');
+      if (stock) this.stock = JSON.parse(stock) as StockItem[];
+      if (waste) this.wastageLog = JSON.parse(waste);
+    } catch { /* Retain starter inventory */ }
   }
 
   private save(): void {
@@ -611,20 +817,18 @@ countGamingStations(category: string): number {
       'tables',
       'new-order',
       'orders',
-      'ready',
       'history'
     ];
 
     const chefPages = [
-      'dashboard',
-      'live-orders',
-      'preparation',
-      'ready',
-      'stock',
-      'recipes',
-      'wastage',
-      'orders'
-    ];
+  'dashboard',
+  'live-orders',
+  'recent-orders',
+  'stock',
+  'recipes',
+  'wastage',
+  'orders'
+];
 
     const allowedPages =
       this.role === 'waiter'
@@ -640,6 +844,7 @@ countGamingStations(category: string): number {
     }
 
     this.page = page;
+    if (page === 'history') this.historyDate = this.localDate(new Date(this.currentTime));
     this.mobileMenuOpen = false;
       }
 
@@ -726,15 +931,9 @@ countGamingStations(category: string): number {
     );
   }
 
-  get elapsedLabel(): string {
-    return 'Live service';
-  }
+  
 
-  countStatus(status: string): number {
-    return this.orders.filter(
-      order => order.status === status
-    ).length;
-  }
+
 
   orderAge(order: Order): number {
     return Math.max(
@@ -750,6 +949,7 @@ countGamingStations(category: string): number {
   // =====================================================
 
   addToCart(item: MenuItem): void {
+    if (!this.isMenuAvailable(item.name)) { this.notify(`${item.name} is unavailable due to kitchen stock.`); return; }
     const existing = this.cart.find(
       line => line.name === item.name
     );
@@ -759,7 +959,8 @@ countGamingStations(category: string): number {
     } else {
       this.cart.push({
         name: item.name,
-        qty: 1
+        qty: 1,
+        price: item.price
       });
     }
   }
@@ -779,11 +980,26 @@ countGamingStations(category: string): number {
   // =====================================================
 
   submitOrder(): void {
+    if (this.cart.some(item => !this.isMenuAvailable(item.name))) { this.notify("Remove unavailable dishes before submitting."); return; }
     if (!this.cart.length) {
       this.notify(
         'Add at least one item to the order.'
       );
 
+      return;
+    }
+
+    if (this.editingOrderId !== null) {
+      const existing = this.orders.find(o => o.id === this.editingOrderId);
+      if (!existing || existing.status === 'Served') { this.notify('Order can no longer be edited.'); return; }
+      existing.items = this.cart.map(i => ({ ...i, price: i.price ?? this.itemPrice(i.name) }));
+      existing.note = this.orderNote.trim() || undefined;
+      this.save();
+      this.editingOrderId = null;
+      this.cart = [];
+      this.orderNote = '';
+      this.page = 'orders';
+      this.notify(`Order #${existing.id} updated.`);
       return;
     }
 
@@ -796,7 +1012,7 @@ countGamingStations(category: string): number {
       table: this.selectedTable,
 
       items: this.cart.map(item => ({
-        ...item
+        ...item, price: this.itemPrice(item.name)
       })),
 
       status: 'New',
@@ -872,7 +1088,7 @@ countGamingStations(category: string): number {
       return;
     }
 
-    const item = this.menu[0];
+    const item = this.menu.find(menuItem => this.isMenuAvailable(menuItem.name));
 
     if (!item) {
       this.notify('No menu items available.');
@@ -890,7 +1106,8 @@ countGamingStations(category: string): number {
       items: [
         {
           name: item.name,
-          qty: 1
+          qty: 1,
+          price: item.price
         }
       ],
 
@@ -934,15 +1151,21 @@ countGamingStations(category: string): number {
     );
   }
 
-  nextChefAction(order: Order): void {
-    if (order.status === 'New') {
-      this.updateStatus(order, 'Accepted');
-    } else if (order.status === 'Accepted') {
-      this.updateStatus(order, 'Preparing');
-    } else if (order.status === 'Preparing') {
-      this.updateStatus(order, 'Ready');
-    }
+nextChefAction(order: Order): void {
+
+  if (
+    order.status === 'New' ||
+    order.status === 'Accepted'
+  ) {
+    this.updateStatus(order, 'Preparing');
+    return;
   }
+
+  if (order.status === 'Preparing') {
+    this.updateStatus(order, 'Ready');
+  }
+
+}
 
   markServed(order: Order): void {
     this.updateStatus(order, 'Served');
@@ -1007,6 +1230,7 @@ countGamingStations(category: string): number {
     });
 
     this.wastageQty = 0.5;
+    this.persistInventory();
 
     this.notify(
       'Wastage entry recorded and stock adjusted.'
@@ -1050,7 +1274,7 @@ countGamingStations(category: string): number {
     return order.items.reduce(
       (sum, item) =>
         sum +
-        this.itemPrice(item.name) * item.qty,
+        (item.price ?? this.itemPrice(item.name)) * item.qty,
       0
     );
   }
@@ -1066,4 +1290,89 @@ countGamingStations(category: string): number {
   this.myTablesCategory = category;
 }
 
+// =====================================================
+// KITCHEN ORDER FILTERS
+// =====================================================
+
+// Active kitchen tickets
+get liveKOT(): Order[] {
+  return this.orders
+    .filter(order =>
+      order.status === 'New' ||
+      order.status === 'Accepted' ||
+      order.status === 'Preparing'
+    )
+    .sort((a, b) => a.created - b.created);
+}
+
+// Completed kitchen tickets
+get recentKitchenOrders(): Order[] {
+  return this.orders
+    .filter(order =>
+      order.status === 'Ready' ||
+      order.status === 'Served'
+    )
+    .sort((a, b) => b.created - a.created);
+}
+
+// Orders displayed on the currently selected page
+get visibleOrders(): Order[] {
+
+  if (this.role === 'chef') {
+
+    if (this.page === 'live-orders') {
+      return this.liveKOT;
+    }
+
+    if (this.page === 'recent-orders') {
+      return this.recentKitchenOrders;
+    }
+
+    return this.orders;
+  }
+
+  // Waiter pages
+  if (this.page === 'history') {
+    return this.historyOrders;
+  }
+
+  return this.activeOrders;
+}
+
+flagSpoiled(item: StockItem): void {
+  if (item.qty <= 0) return;
+
+  const confirmed = window.confirm(
+    `Report all ${item.qty} ${item.unit} of ${item.name} as spoiled?\n\n` +
+    'This will remove the entire available quantity.'
+  );
+
+  if (!confirmed) return;
+
+  const spoiledQty = item.qty;
+
+  item.qty = 0;
+
+  this.wastageLog.unshift({
+    item: item.name,
+    qty: `${spoiledQty} ${item.unit}`,
+    reason: 'Spoiled - Red Flag',
+    time: new Date().toLocaleTimeString([], {
+      hour: '2-digit',
+      minute: '2-digit'
+    })
+  });
+
+  localStorage.setItem(
+    'sanctum-demo-stock',
+    JSON.stringify(this.stock)
+  );
+
+  localStorage.setItem(
+    'sanctum-demo-wastage',
+    JSON.stringify(this.wastageLog)
+  );
+
+  this.notify(`${item.name} flagged as spoiled.`);
+}
 }
